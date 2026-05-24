@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Trading Telemetry Suite</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <script>
+        async function fetchMetrics() {
+            const res = await fetch('/api/trades');
+            const data = await res.json();
+            const logTable = document.getElementById('log-body');
+            logTable.innerHTML = '';
+            
+            if(data.length === 0) {
+                logTable.innerHTML = "<tr><td colspan='4'>Awaiting telemetry metrics from Codespaces execution...</td></tr>";
+                return;
+            }
+            
+            data.forEach(trade => {
+                const badgeColor = trade.action === 'BUY' ? '#2ecc71' : '#e74c3c';
+                logTable.innerHTML += `
+                    <tr>
+                        <td>${trade.timestamp}</td>
+                        <td><b style="color:${badgeColor}">${trade.action}</b></td>
+                        <td>${trade.qty}</td>
+                        <td>$${trade.price}</td>
+                    </tr>`;
+            });
+        }
+        setInterval(fetchMetrics, 5000);
+        window.onload = fetchMetrics;
+    </script>
+</head>
+<body>
+    <h1>📊 Reinforcement Learning System Dashboard</h1>
+    <p>Operational data sync linked with GitHub Codespaces agent container execution metrics.</p>
+    <hr>
+    <h3>Execution Log History</h3>
+    <table>
+        <thead>
+            <tr><th>Timestamp</th><th>Action</th><th>Allocation Qty</th><th>Price</th></tr>
+        </thead>
+        <tbody id="log-body"></tbody>
+    </table>
+</body>
+</html>
